@@ -11,14 +11,13 @@ void setup()
   //give it a second
   delay(1000);
   //generate the MD5 hash for our string
-  unsigned char* hash=MD5::make_hash("hello world");
+  unsigned char hash[16];
+  MD5::make_hash(hash, "hello world");
   //generate the digest (hex encoding) of our hash
-  char *md5str = MD5::make_digest(hash, 16);
-  free(hash);
+  char digest[25+1]; // 25 chars + null terminator
+  MD5::make_digest(hash, 16, digest);
   //print it on our serial monitor
-  Serial.println(md5str);
-  //Give the Memory back to the System if you run the md5 Hash generation in a loop
-  free(md5str);
+  Serial.println(digest);
 }
 
 void loop()
