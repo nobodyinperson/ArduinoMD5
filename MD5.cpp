@@ -277,22 +277,20 @@ void MD5::MD5Final(unsigned char *result, void *ctxBuf)
 
 	memset(ctx, 0, sizeof(*ctx));
 }
-unsigned char* MD5::make_hash(char *arg)
+void MD5::make_hash(char* hash, char *arg)
 {
 	MD5_CTX context;
 	unsigned char hash[16];
 	MD5Init(&context);
 	MD5Update(&context, arg, strlen(arg));
 	MD5Final(hash, &context);
-	return hash;
 }
-unsigned char* MD5::make_hash(char *arg,size_t size)
+void MD5::make_hash(char* hash, char *arg,size_t size)
 {
 	MD5_CTX context;
 	unsigned char hash[16];
 	MD5Init(&context);
 	MD5Update(&context, arg, size);
 	MD5Final(hash, &context);
-	return hash;
 }
 
