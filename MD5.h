@@ -41,7 +41,7 @@ typedef struct {
   MD5_u32plus block[16];
 } MD5_CTX;
 
-class MD5 {
+class MD5 : public Print {
  public:
   MD5();
   static void make_hash(unsigned char *hash, const char *arg);
@@ -52,12 +52,31 @@ class MD5 {
   static void MD5Init(void *ctxBuf);
   static void MD5Final(unsigned char *result, void *ctxBuf);
   static void MD5Update(void *ctxBuf, const void *data, size_t size);
+
+  size_t write(uint8_t c) {
+    uint8_t arg[1] = {c};
+    MD5Update(this->_ctx, arg, 1);
+    return 1;
+  }
+
+  size_t write(const uint8_t *buffer, size_t size) {
+    MD5Update(this->_ctx, buffer, size);
+    return size;
+  }
+
+  void reset(void) { this->MD5Init(this->_ctx); }
+
+  void hexdigest(char *digest) {
+    uint8_t hash[16];
+    MD5Final(hash, this->_ctx);
+    make_digest(hash, 16, digest);
+  }
+
+ private:
+  MD5_CTX _ctx;
 };
 
-MD5::MD5() {
-  // nothing
-  return;
-}
+MD5::MD5(void) { this->reset(); }
 
 void MD5::make_digest(const unsigned char *hash, size_t len, char *md5str) {
   static const char hexits[17] = "0123456789abcdef";
